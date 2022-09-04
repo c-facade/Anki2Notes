@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Anki to written notes</title>
+<link rel="stylesheet" href="style1.css">
+<script src = "mainscript.js"></script>
+</head>
+<body>
+
+<div id = "main" class ="maindiv">
+	<h1>Anki to Written notes</h1>
+	<p>This page generates an html page from anki notes</p>
+
+	<div = boxspace>
+		<p><label for="tite">Input the title of your notes here</label>
+		<input type = "text" id = "tite"></input></p>
+		<p>If you'd like to add a paragraph title, you may put it between this type of parentheses "[[]]". For example, "[[Paragraph Title]]". Don't forget to separate it from the rest of the document with tabs.</p>
+		<p>You can substitute tabs with eight spaces. 
+		<br>For example: <i>"Question?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAnswer"</i>.
+		<p><label for="bod">Input your notes' text here.</label>
+		<textarea name="message", id="bod">The text of your notes.</textarea>
+		<p><input type="button" value="Submit" onclick="start()"></p>
+	</div>
+
+	<div>
+	<a id= "noteslink" href= "/home/francesca/Documents/Anki2Notes/notes.html" target="_blank"></a></div>
+</div>
+</body>
+</html>

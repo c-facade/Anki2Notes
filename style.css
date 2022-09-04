@@ -1,0 +1,115 @@
+body {
+  background-color: #090116;
+  background-image: url("neon-triangles.png");
+  background-repeat: repeat-y;
+  background-position: top left;
+  background-size: 100%;
+  font-family: 'Courier New', monospace;
+}
+
+h1 {
+  margin-left: 20px;
+}
+
+input[type=text] {
+	height: 25px;
+	border-style: inset;
+	padding: 5px;
+	margin-top: 5px;
+	resize: vertical;
+}
+
+input[type=button]:hover{
+	background-color: lightblue;
+}
+
+label {
+	display: block;
+}	
+
+#tite {
+	width: 50%;
+}
+
+#bod {
+	width:90%;
+	height:200px;
+	margin-top: 5px;
+	padding: 5px;
+}
+
+div {
+	margin: 5px 5px 5px 5px;
+}
+
+
+.maindiv {
+	margin: 0px 0px 0px 10px;
+	background-color: hsla(0, 0%, 100%, 0.8);
+	padding: 10px;
+	font-size: 120%;
+}
+
+#md{
+	margin: 0px 0px 0px 20%;
+	background-color: hsla(0, 0%, 100%, 0.5);
+}
+
+.qanda {
+	margin: 10px;
+	margin-right: 20%;
+	border-style: outset;
+	border-color: lightgrey;
+	border-radius: 2px;
+	padding: 10px;
+	background-color: snow;
+	line-height: 1.5;
+}
+
+.domanda {
+	border-style: transparent;
+	border-radius: 5px;
+	background-color: #7ac0ff;
+	padding: 5px;
+	color: black;
+	text-indent: 10px;
+	font-size: 105%;
+}
+
+
+.header {
+  margin: 0px;
+  padding: 10px;
+  padding-top: 20px;
+  text-align: center;
+  background: transparent;
+  color: white;
+  font-size: 150%;
+  letter-spacing: 5px;
+}
+
+button {
+	background: #7ac0ff;
+	font-size: 150%;
+	border-radius: 5px;
+	border-color: #7ac0ff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
