@@ -1,6 +1,13 @@
 
 
 function createNotes(options = null){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	let stile = urlParams.get('stile');
+	if(stile == "modern"){
+		stylelink = document.getElementById("stylesh");
+		stylelink.href = "style1.css";
+	}
 	let title = localStorage.getItem("title");
 	let body = localStorage.getItem("body");
 	let titlenode = document.createTextNode(title);
@@ -44,7 +51,7 @@ function printbody(barr) {
 		let risposta = barr[i+1];
 		
 		//checking for empty strings
-		if (domanda == "" || risposta == "") continue;
+		if (domanda == undefined || risposta == undefined) continue;
 		//checking for cloze
 		if (domanda.indexOf('{{c') != -1){
 			domanda = cleanCloze(domanda);
@@ -80,8 +87,11 @@ function cleanCloze(stringa){
 		let end = stringa.indexOf('}')+1;
 		let interno = stringa.slice(middle, (end-1));
 		interno = '<em><strong>' + interno + '</strong></em>';
-		stringa = stringa.replace(/{{.+}}/i, interno);
+		stringa = stringa.replace(/{{.+?}}/, interno);
 		console.log(stringa);
+		if (stringa.indexOf('{{c') != -1){
+			stringa = cleanCloze(stringa);
+		}
 		return stringa;
 }
 
@@ -106,8 +116,13 @@ function writeLatex(title, bodyarray){
 	
 	for(let i = 0; i < bodyarray.length; i++){
 		str = bodyarray[i];
+		if (str.indexOf('{{c') != -1){
+			str = cleanCloze(str);
+		}
 		str = str.replace(/<b>/g,"\\textbf{");
 		str = str.replace(/<\/b>/g, "}");
+		str = str.replace(/<strong>/g,"\\textbf{");
+		str = str.replace(/<\/strong>/g, "}");
 		str = str.replace(/<i>/g, "\\emph{");
 		str = str.replace(/<\/i>/g, "}");
 		str = str.replace(/<em>/g, "\\emph{");
@@ -116,6 +131,14 @@ function writeLatex(title, bodyarray){
 		str = str.replace(/<br>/g, " \\par ");
 		str = str.replace(/&gt;/g, "$>$");
 		str = str.replace(/&lt;/g, "$<$");
+		str = str.replace(/<ul>/g, "\\begin{itemize} ");
+		str = str.replace(/<\/ul>/g, "\\end{itemize} ");
+		str = str.replace(/<li>/g, "\\item ");
+		str = str.replace(/<\/li>/g, "");
+		str = str.replace(/<ol>/g, "\\begin{enumerate} ");
+		str = str.replace(/<\/ol>/g, "\\end{enumerate} ");
+		str = str.replace(/<li>/g, "\\item ");
+		str = str.replace(/<\/li>/g, "");
 		bodyarray[i] = str;
 	}
 	
@@ -129,11 +152,7 @@ function writeLatex(title, bodyarray){
 		let domanda = bodyarray[i];
 		let risposta = bodyarray[i+1];
 		
-		if(domanda == "" || risposta == "") continue;
-		
-		if (domanda.indexOf('{{c') != -1){
-			domanda = cleanCloze(domanda);
-		}
+		if(domanda == undefined || risposta == undefined) continue;
 		
 		testolatex += "\\paragraph{" + domanda +"}"+ risposta+" ";
 	}
@@ -161,8 +180,8 @@ function makeLatexLink(title, testolatex){
 	bloblink.href = URLblob;
 	bloblink.id = "bloblink";
 	bloblink.innerHTML = "Download as Latex File.";
-	buttondiv = document.getElementById("buttondiv");
-	buttondiv.appendChild(bloblink);
+	downloadlf = document.getElementById("dlf");
+	downloadlf.appendChild(bloblink);
 }
 
 
