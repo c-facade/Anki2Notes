@@ -1,24 +1,27 @@
 <html>
 <head>
 <title>Anki to written notes</title>
-<link rel="stylesheet" href="style1.css">
+<link rel="stylesheet" href="modern.css">
 <script src = "mainscript.js"></script>
 </head>
 <body>
 
 <div id = "main" class ="maindiv">
-	<h1>Anki to Written notes</h1>
-	<p>This page generates an html page from anki notes</p>
+	<h1>Anki to written notes</h1>
+	<p>Generate notes from Anki decks.</p>
 
 	<div = boxspace>
-		<p><label for="tite">Input the title of your notes here</label>
+		<p><label for="tite">Input the title of your notes here.</label>
 		<input type = "text" id = "tite"></input></p>
-		<p>If you'd like to add a paragraph title, you may put it between brackets "[[]]". For example, "[[Paragraph Title]]". Don't forget to separate it from the rest of the document with tabs.</p>
-		<p>You can substitute tabs with eight spaces. 
-		<br>For example: <i>"Question?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAnswer"</i>.
 		<p><label for="bod">Input your notes' text here.</label>
 		<textarea name="message", id="bod">The text of your notes.</textarea>
-		<p><input type="button" value="Submit" onclick="start()"></p>
+		<p><input type="button" value="Submit" onclick="gettext()"></p>
+		<h3>How to</h3>
+		<p>Export your Anki cards with <i>File -> Export</i>. Choose the <i>Notes in simple text (.txt)</i> format.
+		You can edit them or copy the whole text file into the textbox above. Cards need to be separated with tabs. It doesn't recognise labels, so it's better to export cards without them.</p>
+		<p>You can substitute tabs with eight spaces. 
+		<br>For example: <i>"Question?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAnswer"</i>.
+		<br>You can add a section title by preceding it with a hash(#) symbol. Don't forget to separate it from the rest of the text with a tab, or eight spaces.</p>
 	</div>
 
 	<div>
