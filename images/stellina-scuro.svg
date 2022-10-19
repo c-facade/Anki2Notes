@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="52mm"
+   height="52mm"
+   viewBox="0 0 52 52"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="stellina-scuro.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     height="52mm"
+     inkscape:zoom="0.8374018"
+     inkscape:cx="115.23739"
+     inkscape:cy="34.033841"
+     inkscape:window-width="1366"
+     inkscape:window-height="704"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:snap-global="true"
+     inkscape:snap-bbox="true" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.065;stroke-linejoin:round"
+       id="rect3619"
+       width="52.188499"
+       height="52.731331"
+       x="-0.10472608"
+       y="-0.22516108"
+       ry="0" />
+    <path
+       style="fill:#d9cdb2;fill-opacity:1;stroke:none;stroke-width:0.095566px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 18.519371,24.755331 10.277458,6.54619 -4.789149,-10.35784 -3.910629,10.118903 9.685473,-6.28172 z"
+       id="path857"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#e4d9be;fill-opacity:1;stroke:none;stroke-width:0.0551156px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 20.940266,25.192785 5.927279,3.775359 -2.762028,-5.973637 -2.255361,5.835836 5.585865,-3.622832 z"
+       id="path857-3"
+       sodipodi:nodetypes="cccccc" />
+  </g>
+</svg>

@@ -1,11 +1,18 @@
 body {
   background-color: #090116;
-  background-image: url("neon-triangles.png");
-  background-repeat: repeat-y;
+  background-image: url("images/stellina-scuro.svg");
+  background-repeat: repeat;
   background-position: top left;
-  background-size: 100%;
+  background-size: 20px 20px;
   font-family: 'Courier New', monospace;
   color: white;
+}
+
+main {
+	margin: 0px 0px 0px 10px;
+	background-color: rgba(25, 25, 112, 1);
+	padding: 10px;
+	font-size: 100%;
 }
 
 h1 {
@@ -38,14 +45,6 @@ label {
 
 div {
 	margin: 5px 5px 5px 5px;
-}
-
-
-.maindiv {
-	margin: 0px 0px 0px 10px;
-	background-color: rgba(25, 25, 112, 0.8);
-	padding: 10px;
-	font-size: 100%;
 }
 
 #md{

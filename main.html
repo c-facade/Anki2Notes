@@ -1,32 +1,85 @@
 <html>
 <head>
-<title>Anki to written notes</title>
-<link rel="stylesheet" href="modern.css">
-<script src = "mainscript.js"></script>
+	<title>Anki to written notes</title>
+	<link rel="stylesheet" href="newstyle.css">
+	<script src = "mainscript.js"></script>
+	<meta charset='UTF-8'/>
+	<meta name='viewport'
+		content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
 </head>
 <body>
 
-<div id = "main" class ="maindiv">
-	<h1>Anki to written notes</h1>
-	<p>Generate notes from Anki decks.</p>
-
-	<div = boxspace>
-		<p><label for="tite">Input the title of your notes here.</label>
-		<input type = "text" id = "tite"></input></p>
-		<p><label for="bod">Input your notes' text here.</label>
-		<textarea name="message", id="bod">The text of your notes.</textarea>
-		<p><input type="button" value="Submit" onclick="gettext()"></p>
-		<h3>How to</h3>
-		<p>Export your Anki cards with <i>File -> Export</i>. Choose the <i>Notes in simple text (.txt)</i> format.
-		You can edit them or copy the whole text file into the textbox above. Cards need to be separated with tabs. It doesn't recognise labels, so it's better to export cards without them.</p>
-		<p>You can substitute tabs with eight spaces. 
-		<br>For example: <i>"Question?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAnswer"</i>.
-		<br>You can add a section title by preceding it with a hash(#) symbol. Don't forget to separate it from the rest of the text with a tab, or eight spaces.</p>
+<header>
+	<div id="pagetitle">
+		<h1>Anki to written notes</h1>
+		<div class ="subtitle"><em>Generate notes from Anki decks</em></div>
 	</div>
+</header>
+
+<nav id="navbar">
+      <ul class = "menu">
+		<li class="menu-item"><a href="#howto">How To</a></li>
+		<li class="menu-item"><a href="#try">Try it out</a></li>
+	  </ul>
+</nav>
+
+
+<main>	
+	<section id="howto">
+		<h2>How to</h2>
+		<p>Export your Anki cards with <em>File -> Export</em>. Choose the <em>Notes in simple text (.txt)</em> format.<br/>
+			You can edit them or copy the whole text file into the textbox below. Cards need to be separated with tabs.
+			Labels won't be recognised.</p>
+			<details>
+			<summary> See images </summary>
+				<figure>
+					<img src="images/stellina.svg", alt="Tutorial">
+				</figure>
+			</details>
+			<details>
+			<summary> See video tutorial </summary>
+				<video>
+				</video>
+			</details>
+
+			<p>You can substitute tabs with eight spaces. 
+			<br>Example: <em>"Question?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAnswer"</em>.
+		</p>
+		<p>
+			You can add a section title by preceding it with a hash(#) symbol. 
+			Don't forget to separate it from the rest of the text with a tab, or eight spaces.
+		</p>
+	</section>
+	
+	<section id="try">
+		<h1>Create notes</h1>
+			<div class="unit">
+				<label for="tite">Input the title of your notes here.</label>
+				<input type = "text" id = "tite" placeholder="Generic Title"></input>
+			</div>
+			<div class="unit">
+				<label for="bod">Input your notes' text here.</label>
+				<textarea name="message", id="bod">The text of your notes.</textarea>
+			</div>
+			<div class = "unit">
+				<button onclick="gettext()">Submit</button>
+			</div>
+	</section>
+
 
 	<div>
-	<a id= "modernnoteslink" href= "notes.html?stile=modern" target="_blank"></a></div>
-	<a id= "minimalnoteslink" href= "notes.html?stile=minimal" target="_blank"></a><div>
-</div>
+		<a href="notes.html">Click here</a>
+		<a id= "modernnoteslink" href= "notes.html?stile=modern" target="_blank"></a></div>
+		<a id= "minimalnoteslink" href= "notes.html?stile=minimal" target="_blank"></a><div>
+	</div>
+</main>
+
+<footer>
+	This website was written by Github user c-facade.
+</footer>
+
 </body>
+
 </html>
+
+
