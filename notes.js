@@ -1,32 +1,62 @@
+var title = "";
+var body = "";
+//TODO transform body into a dictionaire/object or array of objects (or object of objects) or list of objects
+
+console.log("I'm here");
+
+//this gets the title and the body of the notes
+//and puts it in the global variables
+function gettext(){
+	let t = document.getElementById("tite");
+	title = t.value;
+	console.log(title);
+	body = document.getElementById("bod").value;
+	console.log(body);
+	createNotes();
+	toggle2();
+}
+
+function toggle1(){
+	part1 = document.getElementById("insert");
+	part2 = document.getElementById("editnotes");
+	if(part1 == null || part2 == null){
+		throw("Article not found.");
+	}
+	if(part1.hidden){
+		part1.hidden = false;
+		part2.hidden = true;
+	}
+	return true;
+}
+
+function toggle2(){
+	part1 = document.getElementById("insert");
+	part2 = document.getElementById("editnotes");
+	linkpart2 = document.getElementById("editlink");
+	if(part1 == null || part2 == null || part2 == null){
+		throw("Toggle failed. Not found.");
+	}
+	if(part2.hidden = true){
+		part1.hidden = true;
+		part2.hidden = false;
+		linkpart2.hidden = false;
+		part2.scrollIntoView();
+	}
+	return true;
+}
+
 
 //the main function
 function createNotes(options = null){
 	//gets the choice of style from the url parameters
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	let stile = urlParams.get('stile');
-	//if the style choice is modern, it changes to modern
-	//minimal is the default style
-	if(stile == "modern"){
-		stylelink = document.getElementById("stylesh");
-		stylelink.href = "modern.css";
+	if(title == "" || body == ""){
+		throw("Body or title not found or empty.");
 	}
-	//retrieve the title and the body from
-	//local storage
-	//they had been stored there in mainscript.js
-	let title = localStorage.getItem("title");
-	let body = localStorage.getItem("body");
 	//append a title to the main div
 	let titlenode = document.createTextNode(title);
-	if (document.getElementById("noteh1") != null)
-		document.getElementById("noteh1").appendChild(titlenode);
-		else console.log("Non trovo noteh1");
-	//create a div for the text body
-	let bodydiv = document.createElement("div");
-	bodydiv.id = "bodydiv";
-	if (document.getElementById("md") != null)
-		document.getElementById("md").appendChild(bodydiv);
-		else console.log("Non trovo maindiv");
+	if (document.getElementById("titlenotes") != null)
+		document.getElementById("titlenotes").appendChild(titlenode);
+		else throw("Non trovo noteh1");
 	//splits the body into a string array
 	bodyarray = parsebody(body);
 	//append the body to the body div
@@ -63,37 +93,46 @@ function printbody(barr) {
 			i++;
 		}
 		
-		let domanda = barr[i]; //the front of the card
-		let risposta = barr[i+1]; //the back of the card
+		let question = barr[i]; //the front of the card
+		let answer = barr[i+1]; //the back of the card
 		
 		//checking for empty strings
-		if (domanda == undefined || risposta == undefined) continue;
+		if (question == undefined || answer == undefined) continue;
 		//checking for cloze
-		if (domanda.indexOf('{{c') != -1){
-			domanda = cleanCloze(domanda);
+		if (question.indexOf('{{c') != -1){
+			question = cleanCloze(question);
 		}
 		
 		//creating, naming and categorizing question and
 		//answer div.
-		let domandadiv = document.createElement("div");
-		let rispostadiv = document.createElement("div");
-		domandadiv.id = ("domanda" + i);
-		rispostadiv.id = ("risposta" + (i+1));
-		domandadiv.className = "domanda";
-		rispostadiv.className = "risposta";
-		domandadiv.innerHTML = domanda;
-		rispostadiv.innerHTML = risposta;
+		let questionp = document.createElement("p");
+		let answerp = document.createElement("p");
+		questionp.id = ("question" + i);
+		answerp.id = ("answer" + (i+1));
+		questionp.className = "question";
+		answerp.className = "answer";
+		questionp.innerHTML = question;
+		answerp.innerHTML = answer;
+		
+		//creating options + questions block
+		let qocontainer = document.createElement("div");
+		qocontainer.className = "question-option-container";
+		let optionscontainer = document.createElement("div");
+		optionscontainer.className = "options-container";
+		optionscontainer.innerHTML = "<button class='editbutton'><img src='images/pencil.png' alt='edit block' height='20' width='20'/></button><button class='movebutton'><img src='images/arrows.png' alt='move block' height='20' width='20'/></button>";
+		qocontainer.appendChild(optionscontainer);
+		qocontainer.appendChild(questionp);
 		
 		//creating main q&a block
 		let bloccoquanda = document.createElement("div");
 		bloccoquanda.className = "qanda";
-		bloccoquanda.appendChild(domandadiv);
-		bloccoquanda.appendChild(rispostadiv);
+		bloccoquanda.appendChild(qocontainer);
+		bloccoquanda.appendChild(answerp);
 		//appending q&a block to body
 		if (corpo != null) {
 			corpo.appendChild(bloccoquanda);
 		}
-		else console.log("non trovo il corpo");
+		else console.log("Can't find the body.");
 	}
 }
 
@@ -101,21 +140,21 @@ function printbody(barr) {
 //we will substitute the internal text
 //with emphasised text
 function cleanCloze(stringa){
-		let start = stringa.indexOf('{');
-		let middle = stringa.indexOf(':')+2;
-		let end = stringa.indexOf('}')+1;
-		//interno is the internal text of
-		//the cloze
-		let interno = stringa.slice(middle, (end-1));
-		interno = '<em>' + interno + '</em>';
-		stringa = stringa.replace(/{{.+?}}/, interno);
-		console.log(stringa);
-		//if there is more the one cloze
-		//we call the function again
-		if (stringa.indexOf('{{c') != -1){
-			stringa = cleanCloze(stringa);
-		}
-		return stringa;
+	let start = stringa.indexOf('{');
+	let middle = stringa.indexOf(':')+2;
+	let end = stringa.indexOf('}')+1;
+	//interno is the internal text of
+	//the cloze
+	let interno = stringa.slice(middle, (end-1));
+	interno = '<em>' + interno + '</em>';
+	stringa = stringa.replace(/{{.+?}}/, interno);
+	console.log(stringa);
+	//if there is more the one cloze
+	//we call the function again
+	if (stringa.indexOf('{{c') != -1){
+		stringa = cleanCloze(stringa);
+	}
+	return stringa;
 }
 
 
@@ -178,12 +217,12 @@ function writeLatex(title, bodyarray){
 			i++;
 		}
 		
-		let domanda = bodyarray[i];
-		let risposta = bodyarray[i+1];
+		let question = bodyarray[i];
+		let answer = bodyarray[i+1];
 		
-		if(domanda == undefined || risposta == undefined) continue;
+		if(question == undefined || answer == undefined) continue;
 		
-		testolatex += "\\paragraph{} \\begin{large}" + domanda +"\\end{large} \\hfill "+ risposta+"\n";
+		testolatex += "\\paragraph{} \\begin{large}" + question +"\\end{large} \\hfill "+ answer+"\n";
 	}
 	
 	testolatex += "\\end{multicols}\n \\end{document}\n";
@@ -202,8 +241,7 @@ function sezionelatex(testo){
 function makeLatexLink(title, testolatex){
 	var filename = title + ".anki2notes.tex";
 	var LatexBlob = new Blob([testolatex], {type: "text/plain;charset=utf-8"});
-	var URLblob = URL.createObjectURL(LatexBlob
-);
+	var URLblob = URL.createObjectURL(LatexBlob);
 	let bloblink = document.createElement("a");
 	bloblink.download = filename;
 	bloblink.href = URLblob;
@@ -213,6 +251,35 @@ function makeLatexLink(title, testolatex){
 	downloadlf.appendChild(bloblink);
 }
 
-	
-	
-	
+
+//IMAGES
+
+let slideIndex = 1;
+
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("demo");
+  let captionText = document.getElementById("caption");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  captionText.innerHTML = dots[slideIndex-1].alt;
+} 
