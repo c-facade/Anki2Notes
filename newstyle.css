@@ -190,9 +190,16 @@ main h2 {
 
 .editbutton,
 .movebutton{
-	background-color: #E5E4E2;
-	margin: 2px;
+	background-color: transparent;
+	padding: 2px;
+	margin: 1px;
 	display: inline-flex;
+	min-width: 5px;
+	border: none;
+}
+
+.editbutton:hover, .movebutton:hover{
+	background-color: black;
 }
 
 /* For the images */
@@ -291,6 +298,7 @@ main h2 {
   body {
   	background-color: #1A1A1A;
   	color: #E5E4E2;
+
   }
   
   nav{

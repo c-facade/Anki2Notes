@@ -123,7 +123,7 @@ function printbody(barr) {
 		qocontainer.className = "question-option-container";
 		let optionscontainer = document.createElement("div");
 		optionscontainer.className = "options-container";
-		optionscontainer.innerHTML = "<button class='editbutton'><img src='images/pencil.png' alt='edit block' height='20' width='20'/></button><button class='movebutton'><img src='images/arrows.png' alt='move block' height='20' width='20'/></button>";
+		optionscontainer.innerHTML = "<button class='editbutton'> <picture alt='edit block'> <source srcset='images/pencil.svg' media='(prefers-color-scheme:dark)'> <img src='images/pencil_black.svg' height='20' width='20'/> </picture> </button> <button class='movebutton'> <picture alt='move block'> <source srcset='images/arrows.svg' media='(prefers-color-scheme:dark)'> <img src='images/arrows_black.svg' height='22' width='22' /> </picture> </button>";
 		qocontainer.appendChild(optionscontainer);
 		qocontainer.appendChild(questionp);
 		
