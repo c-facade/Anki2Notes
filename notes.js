@@ -16,6 +16,8 @@ function gettext(){
 	toggle2();
 }
 
+//this activates the first part of the page
+//so the section when you can input your notes.txt
 function toggle1(){
 	part1 = document.getElementById("insert");
 	part2 = document.getElementById("editnotes");
@@ -29,6 +31,8 @@ function toggle1(){
 	return true;
 }
 
+//this activates the second part of the page
+//where you can view and edit your notes
 function toggle2(){
 	part1 = document.getElementById("insert");
 	part2 = document.getElementById("editnotes");
