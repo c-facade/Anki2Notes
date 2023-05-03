@@ -1,8 +1,39 @@
 var title = "";
 var body = "";
-//TODO transform body into a dictionaire/object or array of objects (or object of objects) or list of objects
+var mdnotes = "";
 
-console.log("I'm here");
+console.log("Javascript on.");
+
+codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(hljs, []));
+
+const input = document.getElementById("notes_file");
+input.addEventListener('input', fileToTextArea);
+input.addEventListener('change', fileToTextArea);
+
+function showExample(){
+}
+
+//TODO add a limit to the size of the file
+function fileToTextArea(){
+	console.log("filetotextarea");
+	const notesFile = input.files[0];
+	let tarea = document.getElementById("bod");
+	const reader = new FileReader();
+
+  reader.addEventListener(
+    "load",
+    () => {
+			console.log(reader.result);
+      tarea.value = reader.result;
+    },
+    false
+  );
+
+  if (notesFile) {
+    reader.readAsText(notesFile);
+  }	
+}
+
 
 //this gets the title and the body of the notes
 //and puts it in the global variables
@@ -13,7 +44,7 @@ function gettext(){
 	body = document.getElementById("bod").value;
 	console.log(body);
 	createNotes();
-	toggle2();
+	toggle2(2);
 }
 
 //this activates the first part of the page
@@ -31,28 +62,36 @@ function toggle1(){
 	return true;
 }
 
-//this activates the second part of the page
-//where you can view and edit your notes
-function toggle2(){
+//this activates the third part of the page
+//where you can preview and edit your notes
+function toggle2(part){
 	part1 = document.getElementById("insert");
 	part2 = document.getElementById("editnotes");
+	part3 = document.getElementById("previewnotes");
 	linkpart2 = document.getElementById("editlink");
-	if(part1 == null || part2 == null || part2 == null){
+	linkpart3 = document.getElementById("previewlink");
+	if(part1 == null || part2 == null || part3 == null){
 		throw("Toggle failed. Not found.");
 	}
 	if(part2.hidden = true){
 		part1.hidden = true;
 		part2.hidden = false;
+		part3.hidden = false;
 		linkpart2.hidden = false;
-		part2.scrollIntoView();
+		linkpart3.hidden = false;
+		if(part == 2){
+			part2.scrollIntoView();
+		}
+		else{
+			part3.scrollIntoView();
+		}
 	}
 	return true;
 }
 
 
 //the main function
-function createNotes(options = null){
-	//gets the choice of style from the url parameters
+function createNotes(){
 	if(title == "" || body == ""){
 		throw("Body or title not found or empty.");
 	}
@@ -63,19 +102,46 @@ function createNotes(options = null){
 		else throw("Non trovo noteh1");
 	//splits the body into a string array
 	bodyarray = parsebody(body);
-	//append the body to the body div
-	printbody(bodyarray);
+	//generates markdown
+	mdnotes = generate_markdown(bodyarray);
+	console.log(mdnotes);
+	editor = document.getElementById("editor");
+	editor.value=mdnotes;
+	
+	makeDownloadButton(mdnotes, "md");
+	//creates preview
+	updatePreview();
+
+	makeDownloadButton(body, "html");
 	//creates latex text
-	testolatex = writeLatex(title, bodyarray);
+	//testolatex = writeLatex(title, bodyarray);
 	//appends a link to download the .tex file
-	makeLatexLink(title, testolatex);
-	console.log(testolatex);
+	//makeLatexLink(title, testolatex);
+}
+
+var converter = new showdown.Converter();
+
+function MDtoHTML(mdnotes){
+	var html = converter.makeHtml(mdnotes);
+	return html
+}	
+
+
+function updatePreview(){
+	console.log("Updating preview");
+	editor = document.getElementById("editor");
+	mdnotes = editor.value;
+	body = MDtoHTML(mdnotes);
+
+	bodydiv = document.getElementById("notes-body");
+	bodydiv.innerHTML = body;
 }
 
 
 //splits text body into a string array
 function parsebody(bodytext){
-	bodyarray = bodytext.split(/	|        /);
+	bodyarray = bodytext.split(/\r|\n/);
+	console.log(bodyarray);
 	return bodyarray
 }
 
@@ -140,6 +206,27 @@ function printbody(barr) {
 	}
 }
 
+function generate_markdown(body){
+	let md = [];
+	//TODO consider that cards are separated by a newline
+	//and questions and answers are separated by tabs
+	// also maybe use the converter to transform the first html in md
+	// or just remove breaks? idk
+	// then deal with markdown
+	// put on the download buttons
+	// it's mostly done
+	for (let i = 0; i < body.length; i=i+1){
+		
+		card = body[i].split(/	|    /);
+		let question = converter.makeMarkdown(cleanCloze(card[0])); //the front of the card
+		let answer = converter.makeMarkdown(card[1]); //the back of the card
+		
+		md.push("#### "+question+"\n"+answer+"\n");
+	}
+
+	return mdstring = md.join('');
+}
+
 //if we find a cloze card
 //we will substitute the internal text
 //with emphasised text
@@ -150,7 +237,7 @@ function cleanCloze(stringa){
 	//interno is the internal text of
 	//the cloze
 	let interno = stringa.slice(middle, (end-1));
-	interno = '<em>' + interno + '</em>';
+	interno = '<u><em>' + interno + '</em></u>';
 	stringa = stringa.replace(/{{.+?}}/, interno);
 	console.log(stringa);
 	//if there is more the one cloze
@@ -240,6 +327,21 @@ function sezionelatex(testo){
 	let end = testo.indexOf("]");
 	let interno = testo.slice(start, end);
 	return "\\section{" + interno + "}\n";
+}
+
+function makeDownloadButton(text, extension){
+	var filename = title + "."+extension;
+	var newblob = new Blob([text], {type: "text/plain;charset=utf-8"});
+	var blobURL = URL.createObjectURL(newblob);
+	let downloadlink = document.createElement("a");
+	downloadlink.download = filename;
+	downloadlink.href = blobURL;
+	downloadlink.className = "download-link";
+	let downloadbutton = document.createElement("button");
+	downloadbutton.innerHTML = "Download as ."+extension+" file";
+	downloadlink.appendChild(downloadbutton);
+	downloadlf = document.getElementById("dlf");
+	downloadlf.appendChild(downloadlink);
 }
 
 function makeLatexLink(title, testolatex){

@@ -2,11 +2,17 @@
 <html>
 <head>
 	<title>Anki to written notes</title>
-	<link rel="stylesheet" href="newstyle.css">
-	<script src = "notes.js"></script>
+	<link rel="stylesheet" href="style.css">
 	<meta charset='UTF-8'/>
 	<meta name='viewport'
 		content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/a11y-dark.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+		<!-- and it's easy to individually load additional languages -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/showdown@1.9.0/dist/showdown.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/WebCoder49/code-input@1.3/code-input.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/WebCoder49/code-input@1.3/code-input.min.css">
 </head>
 <body>
 
@@ -21,7 +27,8 @@
       <ul class = "menu">
 		<li class="menu-item"><a href="#howto" onclick="toggle1()">How To</a></li>
 		<li class="menu-item"><a href="#create" onclick="toggle1()">Create Notes</a></li>
-		<li class="menu-item" id="editlink" hidden><a href="#editnotes" onclick="toggle2()">Edit</a></li>
+		<li class="menu-item" id="editlink" hidden><a href="#editnotes" onclick="toggle2(2)">Edit</a></li>
+		<li class="menu-item" id="previewlink" hidden><a href="#previewnotes" onclick="toggle2(3)">Preview</a></li>
 	  </ul>
 </nav>
 
@@ -42,32 +49,44 @@
 					  <!-- Full-width images with number text -->
 					  <div class="mySlides">
 						<div class="numbertext">1 / 6</div>
-						  <img src="images/tutorial1.png" style="width:100%">
+						  <img
+									alt="Click on the File menu in the upper right."
+									src="images/tutorial1.png" style="width:100%">
 					  </div>
 
 					  <div class="mySlides">
 						<div class="numbertext">2 / 6</div>
-						  <img src="images/tutorial2.png" style="width:100%" >
+						  <img 
+							alt="click on 'export'"
+							src="images/tutorial2.png" style="width:100%" >
 					  </div>
 
 					  <div class="mySlides">
 						<div class="numbertext">3 / 6</div>
-						  <img src="images/tutorial3.png" style="width:100%" >
+						  <img 
+								 alt="click on 'Notes in plain text (.txt)'"
+								 src="images/tutorial3.png" style="width:100%" >
 					  </div>
 
 					  <div class="mySlides">
 						<div class="numbertext">4 / 6</div>
-						  <img src="images/tutorial4.png" style="width:100%">
+						  <img
+									alt="Include HTML and media references. Do not include tags"
+									src="images/tutorial4.png" style="width:100%">
 					  </div>
 
 					  <div class="mySlides">
 						<div class="numbertext">5 / 6</div>
-						  <img src="images/tutorial5.png" style="width:100%">
+						  <img 
+								 alt="The resulting text file."
+								 src="images/tutorial5.png" style="width:100%">
 					  </div>
 
 					  <div class="mySlides">
 						<div class="numbertext">6 / 6</div>
-						  <img src="images/tutorial6.png" style="width:100%">
+						  <img 
+								 alt="right click and select copy"
+							src="images/tutorial6.png" style="width:100%">
 					  </div>
 
 					  <!-- Next and previous buttons -->
@@ -116,51 +135,65 @@
 				
 				<details hidden>
 				<summary> See video tutorial </summary>
-					<video>
+					<video>a
 					</video>
 				</details>
 
 				<p>You can substitute tabs with eight spaces. 
-				<br>Example: <em>"Question?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAnswer"</em>.
-			</p>
-			<p>
-				You can add a section title by preceding it with a hash(#) symbol. 
-				Don't forget to separate it from the rest of the text with a tab, or eight spaces.
-			</p>
+				<br>Example: <em>"Question?&nbsp;&nbsp;&nbsp;&nbsp;Answer"</em>.
 		</section>
-	
+
 		<section id="create">
 			<h2>Create notes</h2>
 				<div class="unit">
 					<label for="tite">Input the title of your notes here.</label>
-					<input type = "text" id = "tite" placeholder="Generic Title"></input>
+					<input type = "text" id = "tite" placeholder="Generic Title"/>
 				</div>
 				<div class="unit">
-					<label for="bod">Input your notes' text here.</label>
-					<textarea name="message", id="bod">The text of your notes.</textarea>
+					<label for="notes_file" style="pointer-events: none;">Import your notes file:</label>
+					<input style="cursor: pointer;" type="file" id="notes_file" accept=".txt"/>
+				</div>
+				<!-- <button onclick="showExample()">See example</button> -->
+				<div class="unit">
+					<label for="bod">Or input your notes' text here.</label>
+					<textarea name="message" id="bod" >The text of your notes.</textarea>
 				</div>
 				<div class = "unit">
 					<button onclick="gettext();">Submit</button>
 				</div>
 		</section>
 	</article>
+	
+	<article id="editnotes" hidden>
+		Click here to edit your notes!
 
-	<article id=editnotes hidden>
-		<header><h1 id="titlenotes"></h1></header>
+		<div class="code-input">
+			<code-input id="editor" lang="markdown" placeholder="Here is your notes" template="syntax-highlighted" style="width: calc(100% - 30px); height: 400px;" wrap="soft"></code-input>
+		</div>
+		<div class="unit">
+		<button onclick="updatePreview()">Update preview</button>
+		</div>
+
+	</article>
+
+	<article id="previewnotes" style="margin: 10px;" hidden>
+		<h1 id="titlenotes"></h1>
+		<div id="notes-body"></div>
+		<!--
 		<div class="cards" id="bodydiv">
 			<div class="qanda">
 				<div class="question-option-container">
 					<div class="options-container">
 						<button class='editbutton'>
-							<picture alt='edit block'>
+							<picture>
 							  <source srcset="images/pencil.svg" media="(prefers-color-scheme:dark)">
-								<img src="images/pencil_black.svg" height='20' width='20'/>
+								<img alt = 'edit block' src="images/pencil_black.svg" height='20' width='20'/>
 							</picture>
 						</button>
 						<button class='movebutton'>
-							<picture alt='move block'>
+							<picture>
 								<source srcset='images/arrows.svg' media='(prefers-color-scheme:dark)'>
-								<img src="images/arrows_black.svg" height='22' width='22' />
+								<img alt="move block"  src="images/arrows_black.svg" height='22' width='22' />
 							</picture>
 						</button>
 					</div>
@@ -169,16 +202,19 @@
 				<p class="answer">Answer</p>
 			</div>
 		</div>
-	</article>
+		-->
+		</article>
+		<br>	
+		<div id="dlf" style="margin: 5px; display: flex;"></div>
+
 </main>
 
 <footer>
-	This website was written by Github user c-facade.
-	<div id="dlf"></div>
+	This website was written by Github user c-facade, using <a href="https://highlightjs.org/">hightlight.js</a>, <a href="https://showdownjs.com/">showdown.js</a>, and <a href="https://github.com/WebCoder49/code-input">code-input</a>.
 </footer>
 
+<script src = "notes.js"></script>
 </body>
-
 </html>
 
 

@@ -1,0 +1,8 @@
+Quali sono le componenti di una Macchina di Von Neumann?	Ha due componenti principali:<br>- Memoria, dove sono memorizzati programmi e dati<br>- Unità centrale di elaborazione, che ha il compito di eseguire i programmi immagazzinati in memoria, prelevando le istruzioni e eseguendole.	
+Macchina astratta	un sistema virtuale che rappresenta il comportamento di una macchina fisica	
+La macchina astratta individua	"L'insieme delle risorse necessarie per l'esecuzione dei programmi,<br>Un insieme di istruzioni specificamente progettato per operare queste risorse."	
+Una macchina astratta per un linguaggio funzionale è caratterizzata da tre elementi:	"Lo&nbsp;<b>stack</b>&nbsp;per gestire le chiamate di funzioni<br>L'&nbsp;<b>environment&nbsp;</b>per gestire le associazioni nome-valore<br>Il&nbsp;<b>closure&nbsp;</b>per rappresentare il valore di una funzione."	
+La macchina astratta è una collezione di strutture dati e algoritmi. Quali sono le sue componenti?	"Interprete<br>Memoria<br>controllo<br>operazioni ""primitive""."	
+La componente di controllo svolge i seguenti ruoli:	Acquisire la prossima istruzione<br>Aquisire operandi e memorizzare risultati delle operazioni<br>gestire chiamate e ritorni dai sottoprogrammi<br>Gestire i thread<br>Mantenere le associazioni nome-valore<br>Gestire dinamicamente la memoria.	
+"L'interprete è un programma che prende&nbsp;{{c1::il programma da eseguire}} sottoforma di&nbsp;{{c1::albero di sintassi astratta}} e lo esegue ispezionando la struttura del programma."		
+Se <b>M&nbsp;</b>è una macchina astratta,&nbsp;<b>L<sub>M&nbsp;</sub></b>è	"il suo linguaggio macchina, ovvero il linguaggio che ha come stringhe legali tutti i programmi interpretabili dall'interprete di&nbsp;<b>M.</b>"	
