@@ -2,7 +2,7 @@ var title = "";
 var body = "";
 var mdnotes = "";
 
-console.log("Javascript on.");
+showdown.setOption("noHeaderId", "true");
 
 codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(hljs, []));
 
@@ -10,28 +10,30 @@ const input = document.getElementById("notes_file");
 input.addEventListener('input', fileToTextArea);
 input.addEventListener('change', fileToTextArea);
 
-function showExample(){
-}
-
-//TODO add a limit to the size of the file
 function fileToTextArea(){
 	console.log("filetotextarea");
+	//check the size of the file
+	const fileSize = input.files[0].size / 1024 / 1024; // in MiB
+  if (fileSize > 2) {
+  	alert('File size exceeds 2 MiB');
+    return;
+  }
 	const notesFile = input.files[0];
 	let tarea = document.getElementById("bod");
 	const reader = new FileReader();
 
-  reader.addEventListener(
-    "load",
-    () => {
+	reader.addEventListener(
+	"load",
+	() => {
 			console.log(reader.result);
-      tarea.value = reader.result;
-    },
-    false
-  );
+		tarea.value = reader.result;
+	},
+	false
+	);
 
-  if (notesFile) {
-    reader.readAsText(notesFile);
-  }	
+	if (notesFile) {
+	reader.readAsText(notesFile);
+	}	
 }
 
 
@@ -208,23 +210,40 @@ function printbody(barr) {
 
 function generate_markdown(body){
 	let md = [];
-	//TODO consider that cards are separated by a newline
-	//and questions and answers are separated by tabs
 	// also maybe use the converter to transform the first html in md
-	// or just remove breaks? idk
+	// what did I mean by this
 	// then deal with markdown
+	// and by this
 	// put on the download buttons
 	// it's mostly done
 	for (let i = 0; i < body.length; i=i+1){
-		
-		card = body[i].split(/	|    /);
-		let question = converter.makeMarkdown(cleanCloze(card[0])); //the front of the card
-		let answer = converter.makeMarkdown(card[1]); //the back of the card
-		
+		//TODO migliorare la gestione delle cloze
+		let question = "";
+		let answer = "";
+		if(isClozeCard(body[i])){
+			answer = converter.makeMarkdown(cleanCloze(body[i]));
+			answer = answer.replace(/\n/g, '');
+		}
+		else{
+			card = body[i].split(/	|    /);
+			question = converter.makeMarkdown(card[0]); //the front of the card
+			answer = converter.makeMarkdown(card[1]); //the back of the card
+		}
+		question = question.replace(/^"/, "");
+		question = question.replace(/"$/, "");
+		answer = answer.replace(/^"/, "");
+		answer = answer.replace(/"$/, "");
 		md.push("#### "+question+"\n"+answer+"\n");
 	}
 
 	return mdstring = md.join('');
+}
+
+function isClozeCard(card){
+	if(card.indexOf('{{c') != -1){
+		return true;
+	}
+	return false;
 }
 
 //if we find a cloze card
