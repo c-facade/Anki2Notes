@@ -102,51 +102,64 @@ function createNotes(){
 	if (document.getElementById("titlenotes") != null)
 		document.getElementById("titlenotes").appendChild(titlenode);
 		else throw("Non trovo noteh1");
-	//splits the body into a string array
-	bodyarray = parsebody(body);
+	//splits the body into a cards array
+	cards = parsebody(body);
+	console.log(cards);
 	//generates markdown
-	mdnotes = generate_markdown(bodyarray);
+	mdnotes = generate_markdown(cards);
 	console.log(mdnotes);
 	editor = document.getElementById("editor");
 	editor.value=mdnotes;
 	
-	makeDownloadButton(mdnotes, "md");
-	//creates preview
+	//creates preview and links
 	updatePreview();
-
-	makeDownloadButton(body, "html");
-	//creates latex text
-	//testolatex = writeLatex(title, bodyarray);
-	//appends a link to download the .tex file
-	//makeLatexLink(title, testolatex);
 }
 
-var converter = new showdown.Converter();
+var converter = new showdown.Converter();	
 
-function MDtoHTML(mdnotes){
-	var html = converter.makeHtml(mdnotes);
-	return html
-}	
-
-
+//creates preview and download buttons
 function updatePreview(){
 	console.log("Updating preview");
 	editor = document.getElementById("editor");
 	mdnotes = editor.value;
-	body = MDtoHTML(mdnotes);
-
+	body = converter.makeHtml(mdnotes);
 	bodydiv = document.getElementById("notes-body");
 	bodydiv.innerHTML = body;
+	makeDownloadButton(mdnotes, "md");
+	makeDownloadButton(body, "html");
+	testolatex = writeLatex(title, cards);
+	makeDownloadButton(testolatex, "tex");
 }
 
 
-//splits text body into a string array
+// splits text into an array of cards
 function parsebody(bodytext){
-	bodyarray = bodytext.split(/\r|\n/);
-	console.log(bodyarray);
-	return bodyarray
+  bodyarray = bodytext.split(/\r|\n/);
+  let cardsarray = [];
+  for (let i = 0; i< bodyarray.length; i=i+1){
+    let question = ""; 
+    let answer = ""; 
+    if(isClozeCard(bodyarray[i])){
+      answer = cleanCloze(bodyarray[i]);
+    }   
+    else{
+      card = bodyarray[i].split(/\t|    /);
+      question = card[0];
+      answer = card[1];
+    }   
+    question = question.replace(/^"/, "");
+    question = question.replace(/"$/, "");
+    answer = answer.replace(/^"/, "");
+    answer = answer.replace(/"$/, "");
+    cardsarray.push([question, answer]);
+  }
+  return cardsarray;
 }
 
+// GENERAZIONE HTML __________________________________
+
+
+/*
 //this assumes that the front of the card
 //is a question and the back is the answer
 //so the card block is called q&a 
@@ -207,36 +220,22 @@ function printbody(barr) {
 		else console.log("Can't find the body.");
 	}
 }
+*/
 
-function generate_markdown(body){
+
+function generate_markdown(cards){
 	let md = [];
-	// also maybe use the converter to transform the first html in md
-	// what did I mean by this
-	// then deal with markdown
-	// and by this
-	// put on the download buttons
-	// it's mostly done
-	for (let i = 0; i < body.length; i=i+1){
-		//TODO migliorare la gestione delle cloze
-		let question = "";
-		let answer = "";
-		if(isClozeCard(body[i])){
-			answer = converter.makeMarkdown(cleanCloze(body[i]));
-			answer = answer.replace(/\n/g, '');
-		}
-		else{
-			card = body[i].split(/	|    /);
-			question = converter.makeMarkdown(card[0]); //the front of the card
-			answer = converter.makeMarkdown(card[1]); //the back of the card
-		}
-		question = question.replace(/^"/, "");
-		question = question.replace(/"$/, "");
-		answer = answer.replace(/^"/, "");
-		answer = answer.replace(/"$/, "");
-		md.push("#### "+question+"\n"+answer+"\n");
+	for (let i = 0; i < cards.length; i=i+1){
+		card = cards[i];
+		// a card is an array of two strings
+		// the front and the back of the card
+		card[0] = converter.makeMarkdown(card[0]);
+		card[1] = converter.makeMarkdown(card[1]);
+		card[1] = card[1].replace(/\n/g, '');
+		md.push("#### "+card[0]+"\n"+card[1]+"\n");
 	}
-
-	return mdstring = md.join('');
+	mdstring = md.join('');
+	return mdstring;
 }
 
 function isClozeCard(card){
@@ -258,7 +257,6 @@ function cleanCloze(stringa){
 	let interno = stringa.slice(middle, (end-1));
 	interno = '<u><em>' + interno + '</em></u>';
 	stringa = stringa.replace(/{{.+?}}/, interno);
-	console.log(stringa);
 	//if there is more the one cloze
 	//we call the function again
 	if (stringa.indexOf('{{c') != -1){
@@ -268,101 +266,74 @@ function cleanCloze(stringa){
 }
 
 
-//inserts a Paragraph ti
-function insertsection(body, STitle){
-	sTitle = sTitle.replace(/# */, ""); 
-	sectiondiv = document.createElement("div");
-	sectiondiv.className = "paragraphtitle";
-	sectiondiv.innerHTML= PTitle.slice(start, end);
-	body.appendChild(sectiondiv);
-}
+//LATEX GENERATION -----------------------------------------
 
-
-function writeLatex(title, bodyarray){
+function writeLatex(title, cards){
 	
-	var testolatex = "\\documentclass{article}\n " +
-	" \\title{" + title + "}\n" + "\\author{Anki To Notes}\n"+ "\\date{\\today}\n" + "\\usepackage{multicol}\n" +
-"\\usepackage[margin=1in]{geometry}\n" +
-"\\setlength\\columnsep{20pt}\n" +
-	"\\begin{document}\n" + "\\maketitle\n" + "\\begin{multicols}{2}\n";
+	var testolatex = 
+		"\\documentclass{article}\n " +
+		" \\title{" + title + "}\n" + "\\author{Anki To Notes}\n"+
+		"\\date{\\today}\n" + "\\usepackage{multicol}\n" +
+		"\\usepackage[margin=1in]{geometry}\n" +
+		"\\setlength\\columnsep{20pt}\n" +
+		"\\begin{document}\n" + "\\maketitle\n" + "\\begin{multicols}{2}\n";
 	
 	//ripuliamo da simboli html vari.
+
+
 	
-	for(let i = 0; i < bodyarray.length; i++){
-		str = bodyarray[i];
-		if (str.indexOf('{{c') != -1){
-			str = cleanCloze(str);
-		}
-		
-		if (str[0] == "\"" && str[str.length-1] == "\""){
-			str = str.slice(1, (str.length-1));
-		}
-		str = str.replace(/<b>/g,"\\textbf{");
-		str = str.replace(/<\/b>/g, "}");
-		str = str.replace(/<strong>/g,"\\textbf{");
-		str = str.replace(/<\/strong>/g, "}");
-		str = str.replace(/<i>/g, "\\emph{");
-		str = str.replace(/<\/i>/g, "}");
-		str = str.replace(/<em>/g, "\\emph{");
-		str = str.replace(/<\/em>/g, "}");
-		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/<br>/g, " \\par ");
-		str = str.replace(/&gt;/g, "$>$");
-		str = str.replace(/&lt;/g, "$<$");
-		str = str.replace(/<ul>/g, "\\begin{itemize} ");
-		str = str.replace(/<\/ul>/g, "\\end{itemize} ");
-		str = str.replace(/<li>/g, "\\item ");
-		str = str.replace(/<\/li>/g, "");
-		str = str.replace(/<ol>/g, "\\begin{enumerate} ");
-		str = str.replace(/<\/ol>/g, "\\end{enumerate} ");
-		str = str.replace(/<li>/g, "\\item ");
-		str = str.replace(/<\/li>/g, "");
-		bodyarray[i] = str;
-	}
-	
-	for(let i = 0; i < bodyarray.length; i+=2){
-		//cerca paragrafi
-		if(bodyarray[i].indexOf("[[") != -1){
-			testolatex += sezionelatex(bodyarray[i]);
-			i++;
-		}
-		
-		let question = bodyarray[i];
-		let answer = bodyarray[i+1];
-		
-		if(question == undefined || answer == undefined) continue;
-		
-		testolatex += "\\paragraph{} \\begin{large}" + question +"\\end{large} \\hfill "+ answer+"\n";
+	for(let i = 0; i < cards.length; i++){
+		testolatex += "\\paragraph{} \\begin{large}" + cards[i][0] +"\\end{large} \\hfill "+ cards[i][1]+"\n";
 	}
 	
 	testolatex += "\\end{multicols}\n \\end{document}\n";
-	
+
+	//ripuliamo da simboli html vari
+	testolatex = testolatex.replace(/<b>/g,"\\textbf{");
+	testolatex = testolatex.replace(/<i>/g, "\\emph{");
+	testolatex = testolatex.replace(/<em>/g, "\\emph{");
+	testolatex = testolatex.replace(/&nbsp;/g, " ");
+	testolatex = testolatex.replace(/<br>/g, " \\par ");
+	testolatex = testolatex.replace(/&gt;/g, "$>$");
+	testolatex = testolatex.replace(/&lt;/g, "$<$");
+	testolatex = testolatex.replace(/<ul>/g, "\\begin{itemize} ");
+	testolatex = testolatex.replace(/<\/ul>/g, "\\end{itemize} ");
+	testolatex = testolatex.replace(/<li>/g, "\\item ");
+	testolatex = testolatex.replace(/<\/li>/g, "");
+	testolatex = testolatex.replace(/<ol>/g, "\\begin{enumerate} ");
+	testolatex = testolatex.replace(/<\/ol>/g, "\\end{enumerate} ");
+	testolatex = testolatex.replace(/<u>/g, "\\underline{");
+	testolatex = testolatex.replace(/<\/b>|<\/i>|<\/em>|<\/u>/g, "}");
 	return testolatex;
-	
 }
 
-function sezionelatex(testo){
-	let start = testo.indexOf("[") + 2;
-	let end = testo.indexOf("]");
-	let interno = testo.slice(start, end);
-	return "\\section{" + interno + "}\n";
-}
-
+//make or replace internal file of download button
 function makeDownloadButton(text, extension){
 	var filename = title + "."+extension;
 	var newblob = new Blob([text], {type: "text/plain;charset=utf-8"});
 	var blobURL = URL.createObjectURL(newblob);
-	let downloadlink = document.createElement("a");
-	downloadlink.download = filename;
-	downloadlink.href = blobURL;
-	downloadlink.className = "download-link";
-	let downloadbutton = document.createElement("button");
-	downloadbutton.innerHTML = "Download as ."+extension+" file";
-	downloadlink.appendChild(downloadbutton);
-	downloadlf = document.getElementById("dlf");
-	downloadlf.appendChild(downloadlink);
+	if(document.getElementById("button."+extension) == undefined){
+		let downloadlink = document.createElement("a");
+		downloadlink.download = filename;
+		downloadlink.href = blobURL;
+		downloadlink.className = "download-link";
+		downloadlink.id = "link."+extension;
+		let downloadbutton = document.createElement("button");
+		downloadbutton.innerHTML = "Download as ."+extension+" file";
+		downloadbutton.id = "button."+extension;
+		downloadlink.appendChild(downloadbutton);
+		downloadlf = document.getElementById("dlf");
+		downloadlf.appendChild(downloadlink);
+	}
+	else{
+		downloadlink = document.getElementById("link."+extension);
+		if(downloadlink == undefined) console.log("DOWNLOAD LINK UNDEFINED")
+		downloadlink.href = blobURL;
+	}
+
 }
 
+/*
 function makeLatexLink(title, testolatex){
 	var filename = title + ".anki2notes.tex";
 	var LatexBlob = new Blob([testolatex], {type: "text/plain;charset=utf-8"});
@@ -375,9 +346,9 @@ function makeLatexLink(title, testolatex){
 	downloadlf = document.getElementById("dlf");
 	downloadlf.appendChild(bloblink);
 }
+*/
 
-
-//IMAGES
+//IMAGES ___________________________________________________
 
 let slideIndex = 1;
 
