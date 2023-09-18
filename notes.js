@@ -2,6 +2,19 @@ var title = "";
 var body = "";
 var mdnotes = "";
 
+//TODO creare un'estensione di showdown per gestire le carte
+// in modo da avere carte separate (solo per poi formattare
+// meglio il CSS
+//
+// TODO alternativamente mettere dell'HTML nel markdown
+// che però vabbè non è proprio bello
+//
+// nel caso si potrebbero separare le carte con una linea
+// ma la linea andrebbe poi convertita in un <card>
+// o un div comunque invisibile che serve solo per formattare il css
+
+// per il resto funziona
+
 showdown.setOption("noHeaderId", "true");
 
 codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(hljs, []));
