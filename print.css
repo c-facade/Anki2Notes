@@ -1,0 +1,26 @@
+.card {
+	width: 45%;
+	display: table;
+	page-break-inside: avoid;
+	overflow: auto;
+	display: inline;
+}
+
+body {
+	margin: 0;
+	font-size: 11pt;
+	font-family: Helvetica;
+	background-color: #fff;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+h1 {
+	width: 100%;
+}
+
+p {
+	margin: 5pt 0;
+}
