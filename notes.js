@@ -179,7 +179,7 @@ function updatePreview(){
 	html = html_start+body+html_end;
 	makeDownloadButton(mdnotes, "md");
 	makeDownloadButton(html, "html");
-	testolatex = writeLatex(title, cards);
+	testolatex = writeLatex();
 	makeDownloadButton(testolatex, "tex");
 }
 
@@ -257,7 +257,7 @@ function cleanCloze(stringa){
 
 //LATEX GENERATION -----------------------------------------
 
-function writeLatex(title, cards){
+function writeLatex(){
 	
 	var testolatex = 
 		"\\documentclass{article}\n " +
@@ -269,15 +269,17 @@ function writeLatex(title, cards){
 	
 	//ripuliamo da simboli html vari.
 
-
+	testolatex += body.replace(/<div class="card"><h4>(.+?)<\/h4>((.|\n)+?)<\/div>/g, '\\paragraph{} \\begin{large} $1 \\end{large} \\hfill $2\n');
 	
-	for(let i = 0; i < cards.length; i++){
+	/*for(let i = 0; i < cards.length; i++){
 		testolatex += "\\paragraph{} \\begin{large}" + cards[i][0] +"\\end{large} \\hfill "+ cards[i][1]+"\n";
 	}
+	*/
 	
 	testolatex += "\\end{multicols}\n \\end{document}\n";
 
 	//ripuliamo da simboli html vari
+	testolatex = testolatex.replace(/<p>((.|\n)+?)<\/p>/g, '$1\n');
 	testolatex = testolatex.replace(/<b>/g,"\\textbf{");
 	testolatex = testolatex.replace(/<i>/g, "\\emph{");
 	testolatex = testolatex.replace(/<em>/g, "\\emph{");
