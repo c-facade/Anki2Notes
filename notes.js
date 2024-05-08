@@ -297,6 +297,8 @@ function cleanCloze(stringa){
 
 function writeLatex(){
 	
+	newbody = body.replace(/{/, "\\{");
+	newbody = newbody.replace(/}/, "\\}");
 	var testolatex = 
 		"\\documentclass{article}\n " +
 		" \\title{" + title + "}\n" + "\\author{Anki To Notes}\n"+
@@ -307,7 +309,7 @@ function writeLatex(){
 	
 	//ripuliamo da simboli html vari.
 
-	testolatex += body.replace(/<div class="card"><h4>(.+?)<\/h4>((.|\n)+?)<\/div>/g, '\\paragraph{} \\begin{large} $1 \\end{large} \\hfill $2\n');
+	testolatex += newbody.replace(/<div class="card"><h4>(.+?)<\/h4>((.|\n)+?)<\/div>/g, '\\paragraph{} \\begin{large} $1 \\end{large} \\hfill $2\n');
 	
 	testolatex += "\\end{multicols}\n \\end{document}\n";
 
