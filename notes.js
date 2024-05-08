@@ -42,12 +42,14 @@ var html_start = `
 	</style>
 `;
 var html_end = `
-</body>
+ </body>
 </html>
 `;
 
 //TODO migliorare conversione HTML --> markdown
 //TODO migliorare formattazione dell'HTML
+// TODO maybe use a plugin to transform markdown to latex
+
 
 // options ----------
 
@@ -165,12 +167,20 @@ function createNotes(){
 	//creates preview and links
 	updatePreview();
 }
-
+// TODO is this way of setting html safe?
+// should I disable scripts?
 //creates preview and download buttons
 function updatePreview(){
 	console.log("Updating preview");
 	editor = document.getElementById("editor");
 	mdnotes = editor.value;
+	//TODO too specific, should use something
+	// to stop markdown from transforming latex
+	mdnotes.replace(/_/g, "\_")
+	//TODO this is the point where we should preserve
+	// the markdown content
+	// in an array maybe?
+	// and then put it back in the body after conversion
 	body = converter.makeHtml(mdnotes);
 	bodydiv = document.getElementById("notes-body");
 	bodydiv.innerHTML = body;
@@ -230,21 +240,29 @@ function generate_markdown(cards){
 		card = cards[i];
 		// a card is an array of two strings
 		// the front and the back of the card
+		if (hasMath(card)){
+			console.log("has math");
+		}
 		front = converter.makeMarkdown(card[0]);
 		back = converter.makeMarkdown(card[1]);
-		back = back.replace(/>\n\n/g, '>');
-		md.push("#### "+card[0]+"\n"+card[1]+"\n____\n")
+		//back = back.replace(/>\n\n/g, '>');
+		md.push("#### "+front+"\n"+back+"\n____\n")
 	}
 	mdstring = md.join('');
 	console.log("mdstring ="+mdstring);
 	return mdstring;
 }
 
+// something more precise maybe?
 function isClozeCard(card){
 	if(card.indexOf('{{c') != -1){
 		return true;
 	}
 	return false;
+}
+//implement later?
+function hasMath(text){
+	return true;
 }
 
 //if we find a cloze card
@@ -291,11 +309,6 @@ function writeLatex(){
 
 	testolatex += body.replace(/<div class="card"><h4>(.+?)<\/h4>((.|\n)+?)<\/div>/g, '\\paragraph{} \\begin{large} $1 \\end{large} \\hfill $2\n');
 	
-	/*for(let i = 0; i < cards.length; i++){
-		testolatex += "\\paragraph{} \\begin{large}" + cards[i][0] +"\\end{large} \\hfill "+ cards[i][1]+"\n";
-	}
-	*/
-	
 	testolatex += "\\end{multicols}\n \\end{document}\n";
 
 	//ripuliamo da simboli html vari
@@ -317,6 +330,13 @@ function writeLatex(){
 	testolatex = testolatex.replace(/<u>/g, "\\underline{");
 	testolatex = testolatex.replace(/<\/b>|<\/i>|<\/em>|<\/u>/g, "}");
 	testolatex = testolatex.replace(/<([a-z])>((.|\n)+?)<\/\1>/, '$2');
+	testolatex = testolatex.replace(/[$]/g, "\\(");
+	testolatex = testolatex.replace(/[\/$]/g, "\\)");
+	testolatex = testolatex.replace(/[$$]/g, "\\[");
+	testolatex = testolatex.replace(/[\/$$]/g, "\\]");
+	testolatex = testolatex.replace(/{/g, "\\{");
+	testolatex = testolatex.replace(/}/g, "\\}");
+
 	return testolatex;
 }
 
