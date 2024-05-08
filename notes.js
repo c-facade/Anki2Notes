@@ -185,7 +185,12 @@ function updatePreview(){
 
 // splits text into an array of cards
 function parsebody(bodytext){
-  bodyarray = bodytext.split(/\r|\n/);
+	bodyarray = bodytext.split(/\r|\n/);
+	//fix for more separator types
+	while(bodyarray[0].startsWith('#')){
+		//console.log(bodyarray[0]);
+		bodyarray.shift();
+	}
   let cardsarray = [];
   for (let i = 0; i< bodyarray.length; i=i+1){
     let question = ""; 
@@ -210,7 +215,7 @@ function parsebody(bodytext){
     question = question.replace(/"$/, "");
     answer = answer.replace(/^"/, "");
 		answer = answer.replace(/"$/, "");
-		console.log([question, answer])
+		//console.log([question, answer])
     cardsarray.push([question, answer]);
   }
   return cardsarray;
