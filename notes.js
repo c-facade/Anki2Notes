@@ -196,12 +196,21 @@ function parsebody(bodytext){
     else{
       card = bodyarray[i].split(/\t|    /);
       question = card[0];
-      answer = card[1];
+			answer = card[1];
+			if(question == undefined){
+				console.log("Question is undefined")
+				break;
+			}
+			if(answer == undefined){
+				console.log("created cardsarray")
+				break;
+			}
     }   
     question = question.replace(/^"/, "");
     question = question.replace(/"$/, "");
     answer = answer.replace(/^"/, "");
-    answer = answer.replace(/"$/, "");
+		answer = answer.replace(/"$/, "");
+		console.log([question, answer])
     cardsarray.push([question, answer]);
   }
   return cardsarray;
@@ -240,7 +249,7 @@ function cleanCloze(stringa){
 	//TODO find a way to exclude latex from cloze and other
 	//transformation
 	
-	stringa.replaceAll(/{{c\d+::(.+?)}}/g, "$1")
+	stringa = stringa.replaceAll(/{{c\d+::(.+?)}}/g, "$1")
 	
 	/*let start = stringa.indexOf('{');
 	let middle = stringa.indexOf(':')+2;
