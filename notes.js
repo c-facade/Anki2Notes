@@ -237,7 +237,12 @@ function isClozeCard(card){
 //we will substitute the internal text
 //with emphasised text
 function cleanCloze(stringa){
-	let start = stringa.indexOf('{');
+	//TODO find a way to exclude latex from cloze and other
+	//transformation
+	
+	stringa.replaceAll(/{{c\d+::(.+?)}}/g, "$1")
+	
+	/*let start = stringa.indexOf('{');
 	let middle = stringa.indexOf(':')+2;
 	let end = stringa.indexOf('}')+1;
 	//interno is the internal text of
@@ -248,8 +253,10 @@ function cleanCloze(stringa){
 	//if there is more the one cloze
 	//we call the function again
 	if (stringa.indexOf('{{c') != -1){
+		console.log(stringa);
 		stringa = cleanCloze(stringa);
 	}
+	*/
 	return stringa;
 }
 
