@@ -1,10 +1,11 @@
 .card {
-	width: 45%;
+	/*width: 45%;
 	display: table;
 	page-break-inside: avoid;
 	overflow: auto;
 	display: inline;
 }
+*/
 
 body {
 	margin: 0;

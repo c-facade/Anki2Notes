@@ -352,6 +352,11 @@ main h2 {
   details{
   	color: #1A1A1A;
   }
+  
+  #notes-body details{
+  	background-color: #2D2B28;
+  	color: #E5E4E2;
+  }
 
   .unit textarea,
   .unit button {
