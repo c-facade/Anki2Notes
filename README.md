@@ -15,3 +15,4 @@ You can try it out here https://c-facade.github.io/Anki2Notes/main.html
 - adapt to new Anki options
 - sanitize markdown input with DOM sanitize
 - use md2tex?
+- add image integration
